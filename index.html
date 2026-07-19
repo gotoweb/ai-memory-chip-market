@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI &amp; Memory Chip Market (Simple English Version)</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #070a13;
+            --bg-card: rgba(17, 24, 43, 0.9);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+
+            --primary: #0ea5e9;
+            --primary-glow: rgba(14, 165, 233, 0.2);
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            /* UK Stock UP: Green */
+            --accent-red: #ef4444;
+            /* UK Stock DOWN: Red */
+            --accent-yellow: #f59e0b;
+
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        html {
+            font-size: 17.6px;
+        }
+
+        /* 1.25rem Font Size Constraint globally */
+        p,
+        span,
+        td,
+        th,
+        li,
+        input,
+        button,
+        select {
+            font-size: 1.35rem;
+            /* Min font size above 1.25rem */
+        }
+
+        /* Presentation Wrapper */
+        .presentation-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 1920px;
+            max-height: 1080px;
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 3rem 4.5rem;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+        }
+
+        /* Slide header */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .slide-header .topic {
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .slide-header .session {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* Slide Contents styling */
+        .slide-container {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-title {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #f8fafc 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        /* Slide layout grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.2rem;
+        }
+
+        /* Content Blocks */
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: var(--transition);
+        }
+
+        .content-card h3 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Interactive Steps */
+        .step {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Chart Canvas wrapper */
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 420px;
+        }
+
+        /* Slide Navigation Bar at bottom (EXCEPTION FOR 1.25rem CONSTRAINT) */
+        .slide-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .slide-counter {
+            font-size: 1.1rem;
+            /* Allowed Nav Bar Exception */
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            padding: 0.5rem 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            /* Allowed Nav Bar Exception */
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-glow);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Visual styling for specific slides */
+        /* Slide 1 Cover */
+        .cover-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .cover-tag {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            background: rgba(14, 165, 233, 0.1);
+            padding: 0.4rem 1.4rem;
+            border-radius: 50px;
+        }
+
+        .cover-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 50%, #64748b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cover-author {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-top: 1rem;
+        }
+
+        /* Slide 3 Agenda */
+        .agenda-card {
+            border-top: 4px solid var(--primary);
+        }
+
+        .agenda-card h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+        }
+
+        .agenda-card p {
+            color: var(--text-muted);
+            font-size: 1.35rem;
+            line-height: 1.7;
+        }
+
+        /* Slide 4 Unified Symmetric Diagram */
+        .comparison-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .comparison-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem 3rem;
+            min-height: 180px;
+        }
+
+        .comparison-node {
+            width: 200px;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            font-weight: 700;
+            font-size: 1.35rem;
+        }
+
+        .comparison-channel {
+            flex-grow: 1;
+            margin: 0 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .channel-label {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .road-lane-2 {
+            width: 100%;
+            height: 36px;
+            background: #334155;
+            border-top: 3px solid #94a3b8;
+            border-bottom: 3px solid #94a3b8;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .road-lane-2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            border-top: 2px dashed #cbd5e1;
+            transform: translateY(-50%);
+        }
+
+        .road-lane-hbm {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(90deg, var(--accent-purple) 0%, rgba(139, 92, 246, 0.2) 50%, var(--accent-purple) 100%);
+            border-top: 3px solid #c084fc;
+            border-bottom: 3px solid #c084fc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Stacked HBM layout inside node */
+        .hbm-stacked-node {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            width: 200px;
+        }
+
+        .hbm-stacked-layer {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid var(--accent-purple);
+            padding: 2px;
+            font-size: 1.15rem;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        /* Slide 5 Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.35rem;
+        }
+
+        th {
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(14, 165, 233, 0.03);
+        }
+
+        .stock-up {
+            color: var(--accent-green) !important;
+            /* Green for UP */
+            font-weight: 700;
+        }
+
+        .stock-down {
+            color: var(--accent-red) !important;
+            /* Red for DOWN */
+            font-weight: 700;
+        }
+
+        /* Slide 6 Price Comparison Table */
+        .price-compare-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        /* Slide 7 Graph Diagram */
+        .diagram-container {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 1000 / 500;
+            max-height: 570px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            margin: 0 auto;
+        }
+
+        /* Connection SVGs (z-index 3 to draw above nodes for clear arrowhead visibility) */
+        .svg-connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .diagram-node {
+            position: absolute;
+            padding: 1.2rem 1.8rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.35rem;
+            text-align: center;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            transition: var(--transition);
+            width: auto;
+            height: auto;
+            white-space: nowrap;
+            transform: translate(-50%, -50%);
+        }
+
+        .diagram-node:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        /* Diagram Edge Labels (HTML Absolute positioned above nodes - border removed, background opacity set to 0.3) */
+        .diagram-edge-label {
+            position: absolute;
+            z-index: 4;
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: rgba(7, 10, 19, 0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            border: none;
+            pointer-events: none;
+        }
+
+        /* Position nodes (Centered using transform: translate(-50%, -50%)) */
+        .node-buyers {
+            top: 16%;
+            left: 50%;
+            border-color: var(--accent-purple);
+        }
+
+        .node-nvidia {
+            top: 50%;
+            left: 16%;
+            border-color: var(--accent-red);
+        }
+
+        .node-tsmc {
+            top: 50%;
+            left: 53%;
+            border-color: var(--accent-green);
+        }
+
+        .node-memory {
+            top: 80%;
+            left: 82%;
+            border-color: var(--primary);
+        }
+
+        .node-apple {
+            top: 80%;
+            left: 23%;
+            border-color: var(--accent-yellow);
+        }
+
+        /* Slide 8 Flowchart Nodes styling */
+        .flow-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .flow-node {
+            width: 240px;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-radius: 16px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .flow-node.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .flow-arrow {
+            font-size: 2.2rem;
+            color: var(--text-muted);
+        }
+
+        .node-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .node-tag {
+            font-size: 1.25rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Large bottleneck node style */
+        .node-bottleneck {
+            width: 350px !important;
+            border-color: var(--accent-purple) !important;
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.3) !important;
+        }
+
+        .node-bottleneck .node-title {
+            font-size: 2rem !important;
+            /* LARGE font size for primary bottleneck point */
+            color: #c084fc;
+        }
+
+        .node-bottleneck .node-tag {
+            font-size: 1.35rem !important;
+            color: var(--accent-purple);
+        }
+
+        /* Slide 9 Step header styling */
+        .step-heading {
+            font-size: 2.1rem !important;
+            /* Larger than 1.8rem */
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        #slide-10 .step-heading {
+            font-size: 1.7rem !important;
+        }
+
+        /* Slide 10 Question big style */
+        .question-title {
+            font-size: 4.8rem;
+            font-weight: 900;
+            color: var(--accent-yellow);
+            text-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+            line-height: 1.2;
+            text-align: center;
+            letter-spacing: -2px;
+        }
+
+        /* Slide 12 Scale graphic */
+        .scale-graphic {
+            display: flex;
+            justify-content: space-around;
+            align-items: stretch;
+            gap: 3rem;
+            margin-top: 1rem;
+        }
+
+        .scale-side {
+            flex: 1;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .scale-side.left {
+            border-left: 6px solid var(--accent-red);
+            background: rgba(239, 68, 68, 0.02);
+        }
+
+        .scale-side.right {
+            border-left: 6px solid var(--accent-green);
+            background: rgba(16, 185, 129, 0.02);
+        }
+
+        .scale-side h4 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scale-side ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .scale-side li {
+            font-size: 1.45rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-left: 1.5rem;
+            color: #cbd5e1;
+        }
+
+        .scale-side li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-size: 1.8rem;
+        }
+
+        .scale-side.left li::before {
+            color: var(--accent-red);
+        }
+
+        .scale-side.right li::before {
+            color: var(--accent-green);
+        }
+
+        /* Slide 13 Traffic lights */
+        .lights-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .light-card {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            padding: 1.8rem 2.5rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+        }
+
+        .light-bulb {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .light-desc h4 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .light-desc p {
+            font-size: 1.35rem;
+            color: var(--text-muted);
+        }
+
+        /* Slide 7 Top 15 Companies Grid */
+        .top15-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .top15-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem 0.8rem 1rem 0.8rem;
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 145px;
+            position: relative;
+        }
+
+        .top15-logo {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 4px;
+            margin-bottom: 0.6rem;
+        }
+
+        .top15-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .top15-card.highlight-ai {
+            border-color: var(--primary);
+            background: rgba(14, 165, 233, 0.05);
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.1);
+        }
+
+        .top15-card.highlight-memory {
+            border-color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.05);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.1);
+        }
+
+        .top15-card.highlight-foundry {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.05);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
+        }
+
+        .top15-rank {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 800;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .top15-card.highlight-ai .top15-rank {
+            background: var(--primary);
+            color: #0b0f19;
+        }
+
+        .top15-card.highlight-memory .top15-rank {
+            background: var(--accent-purple);
+            color: #ffffff;
+        }
+
+        .top15-card.highlight-foundry .top15-rank {
+            background: var(--accent-green);
+            color: #0b0f19;
+        }
+
+        .top15-name {
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin: 0.3rem 0;
+            letter-spacing: -0.5px;
+        }
+
+        .top15-tag {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .top15-card.highlight-ai .top15-tag {
+            color: var(--primary);
+        }
+
+        .top15-card.highlight-memory .top15-tag {
+            color: var(--accent-purple);
+        }
+
+        .top15-card.highlight-foundry .top15-tag {
+            color: var(--accent-green);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="presentation-wrapper">
+        <!-- Slide Header -->
+        <div class="slide-header">
+            <span class="topic" id="headerTopic">AI &amp; MEMORY CHIPS</span>
+            <span class="session">A Simple Market Guide for Retail Investors</span>
+        </div>
+
+        <!-- Slide Container -->
+        <div class="slide-container">
+
+            <!-- Slide 1: Cover -->
+            <div class="slide active" id="slide-1" data-topic="Introduction">
+                <div class="cover-content">
+                    <span class="cover-tag">ENGINEER SESSION</span>
+                    <h1 class="cover-title">AI Memory Chip Market:<br>Today and Tomorrow</h1>
+                    <p class="cover-author">An engineer's easy guide to the market peak and ecosystem</p>
+                </div>
+            </div>
+
+            <!-- Slide 2: Price Trend & The Question -->
+            <div class="slide" id="slide-2" data-topic="Market Trend">
+                <h2 class="slide-title">Why Memory Chip Prices Are Surging</h2>
+                <div class="slide-subtitle">Quarterly DRAM Contract Prices since Q1 2023</div>
+                <div class="grid-2">
+                    <div class="chart-box">
+                        <canvas id="dramPriceChart"></canvas>
+                    </div>
+                    <div
+                        style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height: 250px;">
+                        <div class="step content-card" id="s2-step1"
+                            style="border: 2px solid var(--accent-yellow); padding: 2.5rem; text-align: center;">
+                            <h3
+                                style="font-size: 2.2rem; color: var(--accent-yellow); font-weight: 800; margin-bottom: 1rem;">
+                                Question: Is this the highest price (the peak)?</h3>
+                            <p style="font-size: 1.35rem; color: #cbd5e1; font-weight: 300; line-height: 1.6;">We will
+                                look at the facts to see if prices will fall soon or keep going up.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Today's Agenda -->
+            <div class="slide" id="slide-3" data-topic="Agenda">
+                <h2 class="slide-title">Three Main Topics for Today</h2>
+                <div class="slide-subtitle">What we will talk about in this session</div>
+                <div class="grid-3" style="margin-top: 1.5rem;">
+                    <div class="content-card agenda-card" style="border-top-color: var(--primary);">
+                        <h3>1. Why did prices surge so fast?</h3>
+                        <p style="margin-top: 0.5rem; line-height: 1.7;">Explaining the data bottleneck (HBM), how
+                            factories focus only on HBM, and how this makes smartphones more expensive.</p>
+                    </div>
+                    <div class="content-card agenda-card" style="border-top-color: var(--accent-purple);">
+                        <h3>2. Who is leading the market?</h3>
+                        <p style="margin-top: 0.5rem; line-height: 1.7;">Looking at the connections between the Top 10
+                            Big Tech firms (Value Chain) and comparing the stock prices of chip makers.</p>
+                    </div>
+                    <div class="content-card agenda-card" style="border-top-color: var(--accent-green);">
+                        <h3>3. When will the price rise stop?</h3>
+                        <p style="margin-top: 0.5rem; line-height: 1.7;">Analysing chip production limits, identifying
+                            what could cause an oversupply, and sharing 3 traffic lights (signals) for investors.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: AI & Memory Analogy -->
+            <div class="slide" id="slide-4" data-topic="Technology Background">
+                <h2 class="slide-title">AI and Memory: Standard DRAM vs HBM</h2>
+                <div class="slide-subtitle">A simple look at the difference between DRAM and HBM</div>
+                <div class="grid-2">
+                    <div style="display: flex; flex-direction: column; justify-content: center; min-height: 200px;">
+                        <h3 style="font-size: 2.8rem; font-weight: 800; color: var(--primary); line-height: 1.4;">If the
+                            road is blocked, the factory cannot work</h3>
+                    </div>
+                    <div class="comparison-layout">
+                        <!-- Standard Memory Diagram (Factory to Warehouse) -->
+                        <div class="comparison-row step" id="s4-step1">
+                            <div class="comparison-node">🏭 GPU Factory</div>
+                            <div class="comparison-channel">
+                                <span class="channel-label">Standard DRAM: A Narrow Road (32/64-bit)</span>
+                                <div class="road-lane-2">
+                                    <span style="font-size: 1.6rem; transform: translateY(-3px);">🚚</span>
+                                </div>
+                            </div>
+                            <div class="comparison-node">📦 DRAM Warehouse</div>
+                        </div>
+                        <!-- HBM Diagram (Factory to Stacked Warehouse) -->
+                        <div class="comparison-row step" id="s4-step2">
+                            <div class="comparison-node">🏭 GPU Factory</div>
+                            <div class="comparison-channel">
+                                <span class="channel-label" style="color: var(--accent-purple);">HBM: An Ultra-Wide
+                                    Motorway (1024-bit)</span>
+                                <div class="road-lane-hbm">
+                                    <span style="font-size: 1.6rem; letter-spacing: 5px;">🚚🚚🚚</span>
+                                </div>
+                            </div>
+                            <div class="hbm-stacked-node">
+                                <div class="hbm-stacked-layer">DRAM Layer 4</div>
+                                <div class="hbm-stacked-layer">DRAM Layer 3</div>
+                                <div class="hbm-stacked-layer">DRAM Layer 2</div>
+                                <div class="hbm-stacked-layer">DRAM Layer 1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Memory Price Surge -->
+            <div class="slide" id="slide-5" data-topic="Supply Squeeze">
+                <h2 class="slide-title">HBM Production Squeeze &amp; Price Changes</h2>
+                <div class="slide-subtitle">Why standard DRAM is in short supply because of HBM</div>
+                <div class="grid-2">
+                    <div class="content-card">
+                        <h3 style="font-weight: 700; margin-bottom: 1.2rem; color: var(--primary);">Memory Price Changes
+                        </h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Quarterly Price Rise</th>
+                                    <th>What is Happening</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Red for DOWN (UK/US standard) -->
+                                <tr class="stock-down">
+                                    <td>2023 ~ 2024</td>
+                                    <td>-35% Decrease</td>
+                                    <td>Market Downturn &amp; Too Much Stock</td>
+                                </tr>
+                                <!-- Green for UP (UK/US standard) -->
+                                <tr class="stock-up">
+                                    <td><strong>2026 Q1</strong></td>
+                                    <td>+95% Surge</td>
+                                    <td>Not Enough Server Memory</td>
+                                </tr>
+                                <tr class="stock-up">
+                                    <td><strong>2026 Q2</strong></td>
+                                    <td>+63% Additional Surge</td>
+                                    <td>More Factories Changing to HBM</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        style="display: flex; flex-direction: column; justify-content: center; min-height: 200px; padding-left: 2rem;">
+                        <h3 style="font-size: 2.8rem; font-weight: 800; color: var(--accent-red); line-height: 1.4;">HBM
+                            is taking over standard factory lines</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Apple's Cost Transfer -->
+            <div class="slide" id="slide-6" data-topic="Consumer Impact">
+                <h2 class="slide-title">How AI Makes Devices More Expensive</h2>
+                <div class="slide-subtitle">Real examples of device price rises because of chip costs (Source: Reuters
+                    2026.06.25)</div>
+                <div class="grid-2">
+                    <div style="display: flex; flex-direction: column; justify-content: center; min-height: 200px;">
+                        <h3 style="font-size: 2.8rem; font-weight: 800; color: var(--accent-red); line-height: 1.4;">
+                            Apple Raises Prices Across All Main Devices</h3>
+                    </div>
+                    <div class="price-compare-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Old Price</th>
+                                    <th>New Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>MacBook Neo</strong></td>
+                                    <td>$599</td>
+                                    <td class="stock-up">$699 (+$100)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MacBook Air</strong></td>
+                                    <td>$1,099</td>
+                                    <td class="stock-up">$1,299 (+$200)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MacBook Pro</strong></td>
+                                    <td>$1,599</td>
+                                    <td class="stock-up">$1,899 (+$300)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Global Top 15 Companies -->
+            <div class="slide" id="slide-7" data-topic="Global Market">
+                <h2 class="slide-title">Global Top 15 Companies by Market Cap</h2>
+                <div class="slide-subtitle">The world's largest companies ranked by market value (Source:
+                    companiesmarketcap.com)</div>
+                <div class="top15-grid">
+                    <div class="top15-card highlight-ai">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/NVDA.png" class="top15-logo"
+                            alt="NVIDIA">
+                        <span class="top15-rank">1</span>
+                        <h3 class="top15-name">NVIDIA</h3>
+                        <span class="top15-tag">AI GPU Leader</span>
+                    </div>
+                    <div class="top15-card highlight-ai">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/GOOG.png" class="top15-logo"
+                            alt="Alphabet">
+                        <span class="top15-rank">2</span>
+                        <h3 class="top15-name">Alphabet</h3>
+                        <span class="top15-tag">AI Cloud Buyer</span>
+                    </div>
+                    <div class="top15-card highlight-ai">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/AAPL.png" class="top15-logo"
+                            alt="Apple">
+                        <span class="top15-rank">3</span>
+                        <h3 class="top15-name">Apple</h3>
+                        <span class="top15-tag">Consumer AI</span>
+                    </div>
+                    <div class="top15-card highlight-ai">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/MSFT.png" class="top15-logo"
+                            alt="Microsoft">
+                        <span class="top15-rank">4</span>
+                        <h3 class="top15-name">Microsoft</h3>
+                        <span class="top15-tag">AI Cloud Buyer</span>
+                    </div>
+                    <div class="top15-card highlight-ai">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/AMZN.png" class="top15-logo"
+                            alt="Amazon">
+                        <span class="top15-rank">5</span>
+                        <h3 class="top15-name">Amazon</h3>
+                        <span class="top15-tag">AI Cloud Buyer</span>
+                    </div>
+                    <div class="top15-card highlight-foundry">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/TSM.png" class="top15-logo"
+                            alt="TSMC">
+                        <span class="top15-rank">6</span>
+                        <h3 class="top15-name">TSMC</h3>
+                        <span class="top15-tag">Advanced Foundry</span>
+                    </div>
+                    <div class="top15-card highlight-ai">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/AVGO.png" class="top15-logo"
+                            alt="Broadcom">
+                        <span class="top15-rank">7</span>
+                        <h3 class="top15-name">Broadcom</h3>
+                        <span class="top15-tag">Custom AI Chips</span>
+                    </div>
+                    <div class="top15-card">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/2222.SR.png" class="top15-logo"
+                            alt="Saudi Aramco">
+                        <span class="top15-rank">8</span>
+                        <h3 class="top15-name">Saudi Aramco</h3>
+                        <span class="top15-tag">Traditional Energy</span>
+                    </div>
+                    <div class="top15-card highlight-ai">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/TSLA.png" class="top15-logo"
+                            alt="Tesla">
+                        <span class="top15-rank">9</span>
+                        <h3 class="top15-name">Tesla</h3>
+                        <span class="top15-tag">Autonomous AI</span>
+                    </div>
+                    <div class="top15-card highlight-ai">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/META.png" class="top15-logo"
+                            alt="Meta">
+                        <span class="top15-rank">10</span>
+                        <h3 class="top15-name">Meta</h3>
+                        <span class="top15-tag">AI Cloud Buyer</span>
+                    </div>
+                    <div class="top15-card highlight-memory">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/005930.KS.png" class="top15-logo"
+                            alt="Samsung">
+                        <span class="top15-rank">11</span>
+                        <h3 class="top15-name">Samsung</h3>
+                        <span class="top15-tag">Memory &amp; Foundry</span>
+                    </div>
+                    <div class="top15-card highlight-memory">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/000660.KS.png" class="top15-logo"
+                            alt="SK Hynix">
+                        <span class="top15-rank">12</span>
+                        <h3 class="top15-name">SK Hynix</h3>
+                        <span class="top15-tag">HBM Leader</span>
+                    </div>
+                    <div class="top15-card highlight-memory">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/MU.png" class="top15-logo"
+                            alt="Micron">
+                        <span class="top15-rank">13</span>
+                        <h3 class="top15-name">Micron</h3>
+                        <span class="top15-tag">HBM Supplier</span>
+                    </div>
+                    <div class="top15-card">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/BRK-B.png" class="top15-logo"
+                            alt="Berkshire">
+                        <span class="top15-rank">14</span>
+                        <h3 class="top15-name">Berkshire</h3>
+                        <span class="top15-tag">Finance</span>
+                    </div>
+                    <div class="top15-card">
+                        <img src="https://companiesmarketcap.com/img/company-logos/64/LLY.png" class="top15-logo"
+                            alt="Eli Lilly">
+                        <span class="top15-rank">15</span>
+                        <h3 class="top15-name">Eli Lilly</h3>
+                        <span class="top15-tag">Healthcare</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Global Top 10 Club Diagram -->
+            <div class="slide" id="slide-8" data-topic="Global Market">
+                <h2 class="slide-title">The Semiconductor Supply Chain</h2>
+                <div class="slide-subtitle">A simple map of who buys and sells chips in the market</div>
+                <div class="diagram-container">
+                    <!-- Connection SVGs using Bézier curves & Arrowheads -->
+                    <svg class="svg-connections" viewBox="0 0 1000 500">
+                        <defs>
+                            <marker id="arrow" markerWidth="20" markerHeight="20" refX="16" refY="10" orient="auto"
+                                markerUnits="userSpaceOnUse">
+                                <path d="M 4 5 L 16 10 L 4 15 Z" fill="rgba(14, 165, 233, 0.8)" />
+                            </marker>
+                        </defs>
+
+                        <!-- Buyers (500, 80) to Nvidia (160, 230) - Curves left -->
+                        <path d="M 430 110 Q 300 130, 200 210" fill="none" stroke="rgba(139, 92, 246, 0.5)"
+                            stroke-width="3" stroke-dasharray="6,6" marker-end="url(#arrow)" />
+
+                        <!-- Nvidia (160, 230) to TSMC (530, 230) - Slight up curve (Gap closed by starting at X=200 and ending at X=465) -->
+                        <path d="M 200 250 Q 360 240, 465 250" fill="none" stroke="rgba(16, 185, 129, 0.5)"
+                            stroke-width="3" marker-end="url(#arrow)" />
+
+                        <!-- TSMC (530, 230) to Memory (820, 400) - Curves down right -->
+                        <path d="M 640 280 Q 690 310, 730 370" fill="none" stroke="rgba(14, 165, 233, 0.5)"
+                            stroke-width="3" marker-end="url(#arrow)" />
+
+                        <!-- Memory (820, 400) to Nvidia (160, 230) - Dips LOW to avoid Apple/TSMC nodes -->
+                        <path d="M 670 400 C 480 485, 240 485, 160 290" fill="none" stroke="rgba(14, 165, 233, 0.5)"
+                            stroke-width="3" stroke-dasharray="5,5" marker-end="url(#arrow)" />
+
+                        <!-- TSMC (530, 230) to Apple (230, 400) - Curves down left -->
+                        <path d="M 420 280 Q 370 310, 310 370" fill="none" stroke="rgba(16, 185, 129, 0.5)"
+                            stroke-width="3" marker-end="url(#arrow)" />
+
+                        <!-- Apple (230, 400) to Buyers (500, 80) - Curves WIDE left around Nvidia node -->
+                        <path d="M 120 400 C -120 320, -100 130, 400 110" fill="none" stroke="rgba(245, 158, 11, 0.5)"
+                            stroke-width="3" marker-end="url(#arrow)" />
+                    </svg>
+
+                    <!-- Edge text labels with matching line colors, border removed, background opacity set to 0.3 -->
+                    <div class="diagram-edge-label" style="left: 28%; top: 26%; color: var(--accent-purple);">AI
+                        Server/Chip Orders</div>
+                    <div class="diagram-edge-label" style="left: 23%; top: 41%; color: var(--accent-green);">GPU
+                        Manufacturing</div>
+                    <div class="diagram-edge-label" style="left: 63%; top: 61%; color: var(--primary);">Assembly
+                        Outsourcing</div>
+                    <div class="diagram-edge-label" style="left: 36%; top: 92%; color: var(--primary);">HBM Supply</div>
+                    <div class="diagram-edge-label" style="left: 32%; top: 61%; color: var(--accent-green);">Mobile AP
+                        Supply</div>
+                    <div class="diagram-edge-label" style="left: 12%; top: 22%; color: var(--accent-yellow);">Consumer
+                        Device Sales</div>
+
+                    <div class="diagram-node node-buyers">
+                        Big Tech 4 (MS/Google/Amazon/Meta)<br>
+                        <span style="font-size: 1.25rem; color: var(--text-muted); font-weight: normal;">AI Cloud
+                            Capital Providers (Buyers)</span>
+                    </div>
+
+                    <div class="diagram-node node-nvidia">
+                        NVIDIA (Design)<br>
+                        <span style="font-size: 1.25rem; color: var(--text-muted); font-weight: normal;">Designs the AI
+                            Brains</span>
+                    </div>
+
+                    <div class="diagram-node node-tsmc">
+                        TSMC (Foundry)<br>
+                        <span style="font-size: 1.25rem; color: var(--text-muted); font-weight: normal;">Dominance in
+                            Making/Assembling Chips</span>
+                    </div>
+
+                    <div class="diagram-node node-memory">
+                        Top 3 Memory Makers (Hynix/Samsung/Micron)<br>
+                        <span style="font-size: 1.25rem; color: var(--text-muted); font-weight: normal;">Supplies
+                            Ultra-Fast HBM Chips</span>
+                    </div>
+
+                    <div class="diagram-node node-apple">
+                        Apple (Consumer Devices)<br>
+                        <span style="font-size: 1.25rem; color: var(--text-muted); font-weight: normal;">Passes Chip
+                            Costs to Customers</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Global AI Value Chain -->
+            <div class="slide" id="slide-9" data-topic="Ecosystem Dependency">
+                <h2 class="slide-title">The Value Chain: If One Fails, All Fail</h2>
+                <div class="slide-subtitle">How tech companies depend on each other, step by step</div>
+                <div class="flow-container">
+                    <div class="flow-node active" id="node-1">
+                        <div class="node-tag">Stage 1: Capital (Money)</div>
+                        <div class="node-title">Big Tech 4</div>
+                        <div style="font-size: 1.25rem; color: var(--text-muted);">MS, Google, Amazon, Meta</div>
+                    </div>
+                    <div class="flow-arrow">➡️</div>
+                    <div class="flow-node active" id="node-2">
+                        <div class="node-tag">Stage 2: Design</div>
+                        <div class="node-title">NVIDIA</div>
+                        <div style="font-size: 1.25rem; color: var(--text-muted);">AI GPU Design Dominance</div>
+                    </div>
+                    <div class="flow-arrow">➡️</div>
+                    <div class="flow-node active" id="node-3">
+                        <div class="node-tag">Stage 3: Assembly</div>
+                        <div class="node-title">TSMC</div>
+                        <div style="font-size: 1.25rem; color: var(--text-muted);">State-of-the-Art Assembly</div>
+                    </div>
+                    <div class="flow-arrow">➡️</div>
+                    <!-- Highlighted Large Bottleneck Node with Larger Fonts -->
+                    <div class="flow-node active node-bottleneck" id="node-4">
+                        <div class="node-tag">Final Bottleneck: Suppliers</div>
+                        <div class="node-title">Top 3 Memory Makers</div>
+                        <div style="font-size: 1.45rem; color: #e9d5ff; font-weight: 500; margin-top: 0.5rem;">Hynix,
+                            Samsung, Micron</div>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; padding: 1rem;">
+                    <h3 style="font-size: 2.4rem; font-weight: 800; color: var(--primary);">Final Bottleneck: Suppliers
+                        (Top 3 Memory Makers)</h3>
+                </div>
+            </div>
+
+            <!-- Slide 10: Stock Performance Comparison -->
+            <div class="slide" id="slide-10" data-topic="Stock Market">
+                <h2 class="slide-title">Stock Price Performance of Tech Companies</h2>
+                <div class="slide-subtitle">Stock price growth from early 2023 (100%) to mid-2026</div>
+                <div class="grid-2">
+                    <div class="chart-box" style="height: 380px;">
+                        <canvas id="stockGrowthChart"></canvas>
+                    </div>
+                    <div style="display:flex; flex-direction:column; justify-content:center; gap: 1.2rem;">
+                        <div class="step content-card" id="s10-step1"
+                            style="border-left: 4px solid var(--accent-red); padding: 1.2rem;">
+                            <h4 class="step-heading" style="color: var(--accent-red);">1. Design Leader: NVIDIA (Over
+                                +700%)</h4>
+                            <p style="font-size: 1.35rem; color: var(--text-muted);">Grew fast because they dominate the
+                                GPU market, but prices go up and down quickly</p>
+                        </div>
+                        <div class="step content-card" id="s10-step2"
+                            style="border-left: 4px solid var(--accent-purple); padding: 1.2rem;">
+                            <h4 class="step-heading" style="color: var(--accent-purple);">2. HBM Pioneer: SK Hynix (Over
+                                +300%)</h4>
+                            <p style="font-size: 1.35rem; color: var(--text-muted);">Best stock among chip makers
+                                because they supply HBM directly to NVIDIA</p>
+                        </div>
+                        <div class="step content-card" id="s10-step3"
+                            style="border-left: 4px solid var(--accent-green); padding: 1.2rem;">
+                            <h4 class="step-heading" style="color: var(--accent-green);">3. Assembly Dominance: TSMC
+                                (Over +180%)</h4>
+                            <p style="font-size: 1.35rem; color: var(--text-muted);">Shows their strong position as they
+                                are the only ones making high-end chips</p>
+                        </div>
+                        <div class="step content-card" id="s10-step4"
+                            style="border-left: 4px solid var(--primary); padding: 1.2rem;">
+                            <h4 class="step-heading" style="color: var(--primary);">4. Catch-up Phase: Samsung (Around
+                                +60%)</h4>
+                            <p style="font-size: 1.35rem; color: var(--text-muted);">Slower growth because of delays in
+                                getting their HBM chips approved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 11: Title Slide for Core Question -->
+            <div class="slide" id="slide-11" data-topic="Core Question">
+                <div class="cover-content"
+                    style="background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); border-radius: 30px; width: 100%; height: 100%;">
+                    <div class="question-title">When Will This Trend Stop?</div>
+                    <p
+                        style="font-size: 1.5rem; color: var(--text-muted); font-weight: 300; margin-top: 1.5rem; letter-spacing: 1px;">
+                        Tracking chip supply to find the peak of the market
+                    </p>
+                </div>
+            </div>
+
+            <!-- Slide 12: Oligopoly & Capacity Limits -->
+            <div class="slide" id="slide-12" data-topic="Supply Constraints">
+                <h2 class="slide-title">The HBM Big 3 Oligopoly &amp; Factory Limits</h2>
+                <div class="slide-subtitle">Market share and order status in Q1 2026</div>
+                <div class="grid-2">
+                    <div class="chart-box" style="max-height: 320px;">
+                        <canvas id="hbmShareChart"></canvas>
+                    </div>
+                    <div class="content-card"
+                        style="display: flex; flex-direction: column; justify-content: center; gap: 1.5rem;">
+                        <h3 style="font-size: 1.8rem; font-weight: 700; color: var(--accent-purple);">2026 Production is
+                            Fully Booked (Sold-out)</h3>
+                        <ul style="list-style: none; margin-top: 1rem; line-height: 2;">
+                            <li style="font-size: 1.5rem; font-weight: 500; color: #cbd5e1; margin-bottom: 0.8rem;">•
+                                Factory lines are already fully booked</li>
+                            <li style="font-size: 1.5rem; font-weight: 500; color: #cbd5e1;">• Prices cannot drop in the
+                                short term</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 13: Supply &amp; Demand balance -->
+            <div class="slide" id="slide-13" data-topic="Supply &amp; Demand balance">
+                <h2 class="slide-title">Supply and Demand Scales</h2>
+                <div class="slide-subtitle">What keeps chips in short supply vs what can make prices fall</div>
+                <div class="scale-graphic">
+                    <div class="scale-side left">
+                        <h4 style="color: var(--accent-red);">🔴 Prices Stay High or Go Up</h4>
+                        <ul>
+                            <li>Yield issues (factories making too many defective chips)</li>
+                            <li>Huge demand for AI servers</li>
+                            <li>Factories keep focus on HBM lines</li>
+                        </ul>
+                    </div>
+                    <div class="scale-side right">
+                        <h4 style="color: var(--accent-green);">🟢 Prices Fall or Stabilise</h4>
+                        <ul>
+                            <li>Yield improvements (defect rates drop fast)</li>
+                            <li>Too many chips in the market (oversupply)</li>
+                            <li>Building new memory factories</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 14: Conclusion -->
+            <div class="slide" id="slide-14" data-topic="Conclusion">
+                <h2 class="slide-title">Conclusion: 3 Traffic Lights (Signals) for Investors</h2>
+                <div class="slide-subtitle">A simple guide using facts and data, not guesses</div>
+                <div class="lights-container">
+                    <div class="light-card">
+                        <div class="light-bulb"
+                            style="background: var(--accent-green); box-shadow: 0 0 15px var(--accent-green);"></div>
+                        <div class="light-desc">
+                            <h4>1. Monitor Big Tech investment plans</h4>
+                            <p>Monitor whether Google, MS, Meta and Amazon cut budgets for servers and data centres</p>
+                        </div>
+                    </div>
+                    <div class="light-card">
+                        <div class="light-bulb"
+                            style="background: var(--accent-yellow); box-shadow: 0 0 15px var(--accent-yellow);"></div>
+                        <div class="light-desc">
+                            <h4>2. Track daily DRAM price trends</h4>
+                            <p>Track daily spot prices from small dealers, as they change before contract prices do
+                                <span style="font-size: 1.15rem; color: var(--text-muted); margin-left: 1rem;">(*Note:
+                                    use DRAMeXchange)</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="light-card">
+                        <div class="light-bulb"
+                            style="background: var(--accent-red); box-shadow: 0 0 15px var(--accent-red);"></div>
+                        <div class="light-desc">
+                            <h4>3. Track supply expansions by main suppliers</h4>
+                            <p>Observe whether other suppliers get chip approvals or convert more factory lines to HBM,
+                                which increases supply</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 15: Thank You -->
+            <div class="slide" id="slide-15" data-topic="Thank You">
+                <div class="cover-content"
+                    style="background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); border-radius: 30px; width: 100%; height: 100%;">
+                    <span class="cover-tag">END OF PRESENTATION</span>
+                    <h1 class="cover-title">Thank You</h1>
+                    <p class="cover-author" style="margin-top: 1.5rem;">Questions & Discussion Welcome</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Control Bar (EXCEPTION TO 1.25rem CONSTRAINT) -->
+        <div class="slide-nav">
+            <div class="slide-counter" id="slideCounter">1 / 15</div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="prevSlide()">Previous (←)</button>
+                <button class="nav-btn" onclick="nextSlide()">Next (Space / →)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 15;
+
+        let slideSteps = {
+            2: 0,
+            4: 0,
+            10: 0
+        };
+
+        const maxSlideSteps = {
+            2: 1,
+            4: 2,
+            10: 4
+        };
+
+        function updateNav() {
+            document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+
+            const activeSlideEl = document.querySelector(`.slide#slide-${currentSlide}`);
+            if (activeSlideEl) {
+                document.getElementById('headerTopic').textContent = activeSlideEl.getAttribute('data-topic');
+            }
+        }
+
+        function showSlide(index) {
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            const targetSlide = document.getElementById(`slide-${index}`);
+            if (targetSlide) {
+                targetSlide.classList.add('active');
+                currentSlide = index;
+                updateNav();
+
+                triggerChartAnimations(index);
+            }
+        }
+
+        function nextSlide() {
+            const hasSteps = maxSlideSteps[currentSlide] !== undefined;
+            if (hasSteps && slideSteps[currentSlide] < maxSlideSteps[currentSlide]) {
+                slideSteps[currentSlide]++;
+                showStep(currentSlide, slideSteps[currentSlide]);
+            } else {
+                if (currentSlide < totalSlides) {
+                    showSlide(currentSlide + 1);
+                }
+            }
+        }
+
+        // Previous slide function
+        function prevSlide() {
+            const hasSteps = maxSlideSteps[currentSlide] !== undefined;
+            if (hasSteps && slideSteps[currentSlide] > 0) {
+                hideStep(currentSlide, slideSteps[currentSlide]);
+                slideSteps[currentSlide]--;
+            } else {
+                if (currentSlide > 1) {
+                    showSlide(currentSlide - 1);
+                }
+            }
+        }
+
+        function showStep(slideNum, stepNum) {
+            if (slideNum === 2 && stepNum === 1) {
+                document.getElementById('s2-step1').classList.add('active');
+            } else if (slideNum === 4) {
+                document.getElementById(`s4-step${stepNum}`).classList.add('active');
+            } else if (slideNum === 10) {
+                document.getElementById(`s10-step${stepNum}`).classList.add('active');
+                showStockLine(stepNum - 1);
+            }
+        }
+
+        function hideStep(slideNum, stepNum) {
+            if (slideNum === 2 && stepNum === 1) {
+                document.getElementById('s2-step1').classList.remove('active');
+            } else if (slideNum === 4) {
+                document.getElementById(`s4-step${stepNum}`).classList.remove('active');
+            } else if (slideNum === 10) {
+                document.getElementById(`s10-step${stepNum}`).classList.remove('active');
+                hideStockLine(stepNum - 1);
+            }
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Chart.js Instances
+        let dramChartInst = null;
+        let stockChartInst = null;
+        let hbmChartInst = null;
+
+        function triggerChartAnimations(slideIndex) {
+            if (slideIndex === 2 && !dramChartInst) {
+                initDramChart();
+            }
+            if (slideIndex === 10 && !stockChartInst) {
+                initStockChart();
+            }
+            if (slideIndex === 12 && !hbmChartInst) {
+                initHbmChart();
+            }
+        }
+
+        function initDramChart() {
+            const ctxDram = document.getElementById('dramPriceChart').getContext('2d');
+            dramChartInst = new Chart(ctxDram, {
+                type: 'line',
+                data: {
+                    labels: ['23 Q1', '23 Q2', '23 Q3', '23 Q4', '24 Q1', '24 Q2', '24 Q3', '24 Q4', '25 Q1', '25 Q2', '25 Q3', '25 Q4', '26 Q1', '26 Q2', '26 Q3(E)'],
+                    datasets: [{
+                        label: '16Gb DDR5 Wholesale Price (USD)',
+                        data: [1.80, 1.55, 1.35, 1.20, 1.30, 1.40, 1.55, 1.70, 1.95, 2.20, 2.50, 2.85, 4.20, 4.95, 5.20],
+                        borderColor: '#0ea5e9',
+                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#0ea5e9',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#f8fafc',
+                                font: { size: 20, weight: 'bold' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(11, 15, 25, 0.95)',
+                            borderColor: 'rgba(14, 165, 233, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            titleFont: { size: 18 },
+                            bodyFont: { size: 18 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 20 },
+                                callback: function (value) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'DRAM Contract Price (USD)',
+                                color: '#94a3b8',
+                                font: { size: 20, weight: 'bold' }
+                            }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8', font: { size: 20 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initStockChart() {
+            const ctxStock = document.getElementById('stockGrowthChart').getContext('2d');
+            stockChartInst = new Chart(ctxStock, {
+                type: 'line',
+                data: {
+                    labels: ['2023.01', '2023.07', '2024.01', '2024.07', '2025.01', '2025.07', '2026.01', '2026.07'],
+                    datasets: [
+                        {
+                            label: 'NVIDIA',
+                            data: [100, 250, 380, 520, 600, 680, 750, 800],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            tension: 0.2,
+                            hidden: true
+                        },
+                        {
+                            label: 'SK Hynix',
+                            data: [100, 140, 180, 220, 260, 310, 380, 400],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            tension: 0.2,
+                            hidden: true
+                        },
+                        {
+                            label: 'TSMC',
+                            data: [100, 115, 130, 160, 190, 220, 250, 280],
+                            borderColor: '#10b981',
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            tension: 0.2,
+                            hidden: true
+                        },
+                        {
+                            label: 'Samsung Electronics',
+                            data: [100, 110, 115, 125, 135, 145, 175, 160],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            tension: 0.2,
+                            hidden: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#f8fafc',
+                                font: { family: 'Noto Sans KR', weight: '600', size: 20 },
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8', font: { size: 20 }, callback: v => v + '%' },
+                            title: {
+                                display: true,
+                                text: 'Cumulative Share Price Growth (%)',
+                                color: '#94a3b8',
+                                font: { size: 20, weight: 'bold' }
+                            }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8', font: { size: 20 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function showStockLine(datasetIndex) {
+            if (stockChartInst) {
+                stockChartInst.setDatasetVisibility(datasetIndex, true);
+                stockChartInst.update();
+            }
+        }
+
+        // Initialize line visibility
+        function hideStockLine(datasetIndex) {
+            if (stockChartInst) {
+                stockChartInst.setDatasetVisibility(datasetIndex, false);
+                stockChartInst.update();
+            }
+        }
+
+        function initHbmChart() {
+            const ctxHbm = document.getElementById('hbmShareChart').getContext('2d');
+            hbmChartInst = new Chart(ctxHbm, {
+                type: 'doughnut',
+                data: {
+                    labels: ['SK Hynix (58%)', 'Samsung Electronics (21%)', 'Micron (21%)'],
+                    datasets: [{
+                        data: [58, 21, 21],
+                        backgroundColor: ['#8b5cf6', '#3b82f6', '#10b981'],
+                        borderWidth: 2,
+                        borderColor: '#0b0f19'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#f8fafc', font: { family: 'Noto Sans KR', size: 20 }, padding: 20 }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // Initialize layout on load
+        updateNav();
+    </script>
+</body>
+
+</html>
